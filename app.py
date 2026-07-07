@@ -1,3 +1,4 @@
+import base64
 import math
 from pathlib import Path
 
@@ -26,6 +27,14 @@ st.markdown(
         .hero {
             text-align: center;
             margin-bottom: 24px;
+        }
+        .hero img {
+            display: block;
+            margin: 0 auto;
+        }
+        .hero-caption {
+            color: rgba(49, 51, 63, 0.6);
+            font-size: 0.875rem;
         }
         .card {
             background: #F8F8F8;
@@ -112,13 +121,22 @@ initialize_members()
 
 logo_path = Path(__file__).parent / "cosmaxlogo.png"
 
-st.markdown('<div class="hero">', unsafe_allow_html=True)
+logo_html = ""
 if logo_path.exists():
-    st.image(str(logo_path), width=220)
-st.markdown('<div class="stamp">센스MAX 신입사원 인증</div>', unsafe_allow_html=True)
-st.markdown("<h1>행복<span style='color:#FF8166'>MAX</span> 점심시간</h1>", unsafe_allow_html=True)
-st.caption("전날 먹은 메뉴와 취향을 입력하면, 판교 근처에서 팀원 모두가 만족할 메뉴를 찾아드려요.")
-st.markdown("</div>", unsafe_allow_html=True)
+    logo_b64 = base64.b64encode(logo_path.read_bytes()).decode()
+    logo_html = f'<img src="data:image/png;base64,{logo_b64}" width="220" />'
+
+st.markdown(
+    f"""
+    <div class="hero">
+        {logo_html}
+        <div class="stamp">센스MAX 신입사원 인증</div>
+        <h1>행복<span style='color:#FF8166'>MAX</span> 점심시간</h1>
+        <p class="hero-caption">전날 먹은 메뉴와 취향을 입력하면, 판교 근처에서 팀원 모두가 만족할 메뉴를 찾아드려요.</p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 st.markdown("<div class='section-label'>팀원별 정보 입력</div>", unsafe_allow_html=True)
 
