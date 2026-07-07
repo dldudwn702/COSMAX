@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>센스MAX 신입사원의 행복MAX 점심시간</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFFBF2;
+    --white:#FFFFFF;
+    --card-bg:#F8F8F8;
+    --orange:#FF8166;
+    --orange-deep:#E1583A;
+    --secondary:#D9603C;
+    --secondary-deep:#B84A2B;
+    --yellow:#FFC94D;
+    --ink:#3B2A1F;
+    --ink-soft:#8B7663;
+    --mint:#2FAE96;
+    --line: rgba(59,42,31,0.10);
+  }
+  *{box-sizing:border-box;}
+  html{
+    -webkit-text-size-adjust:100%;
+    -moz-text-size-adjust:100%;
+    text-size-adjust:100%;
+  }
+  html, body{overflow-x:hidden;}
+  body{
+    margin:0;
+    background:var(--cream);
+    background-image:
+      radial-gradient(circle at 10% 8%, rgba(255,201,77,0.35), transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(255,122,46,0.18), transparent 45%);
+    font-family:'Noto Sans KR', sans-serif;
+    color:var(--ink);
+    display:flex;
+    justify-content:center;
+    padding: 28px 16px 60px;
+    min-height:100vh;
+  }
+  .bg-logo{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:360px;
+    max-width:70vw;
+    z-index:0;
+    pointer-events:none;
+    opacity:0.07;
+  }
+  .page{
+    width:100%;
+    max-width:480px;
+    position:relative;
+    z-index:1;
+  }
+
+  /* ---- Header / Stamp badge ---- */
+  header{
+    text-align:center;
+    margin-bottom: 28px;
+    position:relative;
+  }
+  .stamp{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Jua', sans-serif;
+    font-size:14px;
+    color:var(--white);
+    background:var(--orange);
+    padding:6px 16px;
+    border-radius:999px;
+    transform: rotate(-4deg);
+    box-shadow: 0 3px 0 var(--orange-deep);
+    letter-spacing:0.5px;
+    margin-bottom:14px;
+  }
+  h1{
+    font-family:'Jua', sans-serif;
+    font-size: 28px;
+    line-height:1.35;
+    margin:0 0 10px;
+    color:var(--ink);
+  }
+  h1 .accent{color:var(--orange);}
+  .desc{
+    font-size:14px;
+    color:var(--ink-soft);
+    line-height:1.6;
+    margin:0 auto;
+    max-width:340px;
+  }
+
+  /* ---- Section label ---- */
+  .section-label{
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin: 22px 4px 10px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .section-label::before{
+    content:"🍚";
+    font-size:14px;
+  }
+
+  /* ---- Member cards ---- */
+  #members{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .member-card{
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px;
+    box-shadow: 0 2px 10px rgba(59,42,31,0.05);
+    position:relative;
+  }
+  .member-top{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .member-avatar{
+    width:30px;height:30px;
+    border-radius:50%;
+    background: var(--yellow);
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;
+    flex-shrink:0;
+  }
+  .name-input{
+    border:none;
+    background:transparent;
+    font-family:'Noto Sans KR';
+    font-weight:700;
+    font-size:16px;
+    color:var(--ink);
+    flex:1;
+    outline:none;
+    min-width:0;
+  }
+  .name-input::placeholder{color:var(--ink-soft); font-weight:500;}
+  .remove-btn{
+    border:none;
+    background:transparent;
+    color:var(--ink-soft);
+    font-size:16px;
+    cursor:pointer;
+    padding:8px;
+    line-height:1;
+    flex-shrink:0;
+  }
+  .remove-btn:hover{color:var(--orange);}
+
+  .field-label{
+    font-size:11px;
+    color:var(--ink-soft);
+    font-weight:700;
+    margin: 10px 0 6px;
+  }
+  .yesterday-input{
+    width:100%;
+    padding:10px 12px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:var(--cream);
+    font-size:16px;
+    font-family:'Noto Sans KR';
+    color:var(--ink);
+    outline:none;
+  }
+  .yesterday-input:focus{border-color:var(--orange);}
+
+  .tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .tag{
+    padding:6px 12px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--cream);
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink-soft);
+    cursor:pointer;
+    user-select:none;
+    transition: all .15s ease;
+  }
+  .tag.active{
+    background:var(--mint);
+    border-color:var(--mint);
+    color:var(--white);
+  }
+
+  .add-member{
+    margin-top:14px;
+    width:100%;
+    padding:13px;
+    border-radius:14px;
+    border:2px dashed var(--orange);
+    background:transparent;
+    color:var(--orange-deep);
+    font-weight:700;
+    font-size:14px;
+    font-family:'Noto Sans KR';
+    cursor:pointer;
+  }
+  .add-member:hover{background:rgba(255,122,46,0.06);}
+
+  /* ---- CTA Ticket Button ---- */
+  .ticket-wrap{
+    margin-top: 26px;
+    position:relative;
+  }
+  .ticket-btn{
+    width:100%;
+    border:none;
+    cursor:pointer;
+    background: var(--secondary);
+    color:var(--white);
+    font-family:'Jua', sans-serif;
+    font-size:18px;
+    padding:18px 10px;
+    border-radius:14px;
+    box-shadow: 0 4px 0 var(--secondary-deep);
+    position:relative;
+    letter-spacing:0.5px;
+    transition: transform .08s ease;
+  }
+  .ticket-btn:active{
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--secondary-deep);
+  }
+  .ticket-btn::before, .ticket-btn::after{
+    content:"";
+    position:absolute;
+    width:16px;height:16px;
+    background:var(--cream);
+    border-radius:50%;
+    top:50%;
+    transform:translateY(-50%);
+  }
+  .ticket-btn::before{ left:-8px; }
+  .ticket-btn::after{ right:-8px; }
+
+  /* ---- Result ---- */
+  #result{
+    margin-top:20px;
+    display:none;
+  }
+  .result-card{
+    background:var(--card-bg);
+    border-radius:16px;
+    padding:18px;
+    text-align:center;
+    border:1px solid var(--line);
+    box-shadow: 0 2px 10px rgba(59,42,31,0.06);
+  }
+  .result-eyebrow{
+    font-size:12px;
+    color:var(--mint);
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .result-name-row{
+    display:flex;
+    align-items:baseline;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:4px;
+  }
+  .result-name{
+    font-family:'Jua', sans-serif;
+    font-size:22px;
+    color:var(--ink);
+  }
+  .result-rating{
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .result-sub{
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  .result-address{
+    display:inline-block;
+    margin-top:10px;
+    font-size:13px;
+    font-weight:700;
+    color:var(--mint);
+    text-decoration:underline;
+  }
+  .result-walk{
+    margin-top:6px;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  .result-reserve-btn{
+    display:block;
+    margin-top:14px;
+    padding:12px;
+    border-radius:12px;
+    background:var(--mint);
+    color:var(--white);
+    font-weight:700;
+    font-size:14px;
+    text-decoration:none;
+    text-align:center;
+  }
+
+  footer{
+    text-align:center;
+    margin-top:36px;
+    font-size:11px;
+    color:var(--ink-soft);
+  }
+
+  @media (max-width: 360px){
+    h1{font-size:24px;}
+    .desc{font-size:13px;}
+  }
+</style>
+</head>
+<body>
+  <img class="bg-logo" src="cosmaxlogo.png" alt="" aria-hidden="true">
+  <div class="page">
+    <header>
+      <div class="stamp">센스MAX 신입사원 인증</div>
+      <h1>행복<span class="accent">MAX</span> 점심시간</h1>
+      <p class="desc">전날 먹은 메뉴와 취향을 입력하면,<br>판교 근처에서 팀원 모두가 만족할 메뉴를 찾아드려요.</p>
+    </header>
+
+    <div class="section-label">팀원별 정보 입력</div>
+    <div id="members"></div>
+
+    <button class="add-member" id="addMemberBtn">+ 팀원 추가하기</button>
+
+    <div class="ticket-wrap">
+      <button class="ticket-btn" id="recommendBtn">오늘의 메뉴 추천받기</button>
+    </div>
+
+    <div id="result">
+      <div class="result-card">
+        <div class="result-eyebrow">오늘의 추천 도착!</div>
+        <div class="result-name-row">
+          <span class="result-name" id="resultName">-</span>
+          <span class="result-rating" id="resultRating">-</span>
+        </div>
+        <div class="result-sub" id="resultSub">-</div>
+        <a class="result-address" id="resultAddress" href="#" target="_blank" rel="noopener">-</a>
+        <div class="result-walk" id="resultWalk">-</div>
+        <a class="result-reserve-btn" id="resultReserve" href="#" target="_blank" rel="noopener">-</a>
+      </div>
+    </div>
+
+    <footer>코맥인들의 슬기로운 점심시간을 위하여</footer>
+  </div>
+
+<script>
+  const TAG_OPTIONS = ["한식","중식","일식","양식","분식","아시안","맵게"];
+  const RESTAURANTS = [
+    { name: "역전할머니맥주 분당판교역점", menu: "치즈라볶이", tags: ["분식","맵게"], address: "경기 성남시 분당구 판교역로192번길 14-2", distanceM: 450, walkMin: 6, rating: 3.9, catchtable: false },
+    { name: "마라공방 판교점", menu: "마라탕", tags: ["중식","맵게"], address: "경기 성남시 분당구 판교역로192번길 12 2층", distanceM: 430, walkMin: 6, rating: 4.3, catchtable: false },
+    { name: "르메콩", menu: "소고기쌀국수", tags: ["아시안"], address: "경기 성남시 분당구 대왕판교로 670 유스페이스2(B동) 2층 218호", distanceM: 900, walkMin: 12, rating: 4.6, catchtable: false },
+    { name: "여의나룻", menu: "한우탕", tags: ["한식"], address: "경기 성남시 분당구 분당내곡로 131 판교테크원 2층", distanceM: 1100, walkMin: 14, rating: 4.4, catchtable: false },
+    { name: "해미옥", menu: "해물칼국수", tags: ["한식"], address: "경기 성남시 분당구 대왕판교로606번길 41 지하1층 B01호", distanceM: 650, walkMin: 9, rating: 4.2, catchtable: false },
+    { name: "카츠쇼쿠도우", menu: "로스카츠 정식", tags: ["일식"], address: "경기 성남시 분당구 판교역로 152 알파돔타워3 지하1층 9호", distanceM: 480, walkMin: 6, rating: 4.5, catchtable: false },
+    { name: "신승반점 현대백화점판교점", menu: "유니짜장", tags: ["중식"], address: "경기 성남시 분당구 판교역로146번길 20 현대백화점 판교점 지하1층", distanceM: 500, walkMin: 7, rating: 4.6, catchtable: true },
+    { name: "매드포갈릭 판교라스트리트점", menu: "로제파스타", tags: ["양식"], address: "경기 성남시 분당구 대왕판교로606번길 10 알파리움타워 1동 2층", distanceM: 600, walkMin: 8, rating: 4.2, catchtable: true },
+    { name: "청년다방 판교테크노밸리점", menu: "불향차돌떡볶이", tags: ["분식","맵게"], address: "경기 성남시 분당구 대왕판교로 660 유스페이스1 A동 206호", distanceM: 900, walkMin: 12, rating: 4.3, catchtable: false },
+    { name: "영심이떡볶이&김밥 판교2호점", menu: "떡볶이", tags: ["분식"], address: "경기 성남시 분당구 대왕판교로606번길 45 판교역 푸르지오시티", distanceM: 550, walkMin: 7, rating: 4.0, catchtable: false }
+  ];
+
+  function mapSearchUrl(restaurant){
+    return `https://map.kakao.com/?q=${encodeURIComponent(restaurant.name + ' ' + restaurant.address)}`;
+  }
+
+  function renderStars(rating){
+    const full = Math.round(rating);
+    return '⭐'.repeat(full) + '☆'.repeat(5 - full) + ` ${rating.toFixed(1)}`;
+  }
+
+  function reservationInfo(restaurant){
+    const query = restaurant.name;
+    if (restaurant.catchtable) {
+      return {
+        url: `https://app.catchtable.co.kr/ct/map/COMMON?showTabs=true&serviceType=INTEGRATION&keyword=${encodeURIComponent(query)}&keywordSearch=${encodeURIComponent(query)}&bottomSheetHeightType=HALF`,
+        label: '캐치테이블에서 예약하기'
+      };
+    }
+    return {
+      // 네이버 지도(플레이스)는 SPA라 매장별 고유 URL(숫자ID)을 외부에서 검증할 수 없어,
+      // 상호명으로 네이버 지도에서 바로 검색되는 링크로 연결
+      url: `https://map.naver.com/p/search/${encodeURIComponent(query)}`,
+      label: '네이버 플레이스에서 보기'
+    };
+  }
+
+  let memberCount = 0;
+
+  function createMemberCard(){
+    memberCount++;
+    const id = memberCount;
+    const card = document.createElement('div');
+    card.className = 'member-card';
+    card.dataset.id = id;
+    card.innerHTML = `
+      <div class="member-top">
+        <div class="member-avatar">🙂</div>
+        <input class="name-input" placeholder="팀원 ${id} 이름 (선택)">
+        <button class="remove-btn" title="삭제">✕</button>
+      </div>
+      <div class="field-label">전날 먹은 메뉴</div>
+      <input class="yesterday-input" placeholder="예: 삼겹살, 김치찌개">
+      <div class="field-label">취향 태그</div>
+      <div class="tags">
+        ${TAG_OPTIONS.map(t => `<span class="tag">${t}</span>`).join('')}
+      </div>
+    `;
+    card.querySelector('.remove-btn').addEventListener('click', () => {
+      card.remove();
+    });
+    card.querySelectorAll('.tag').forEach(tag => {
+      tag.addEventListener('click', () => tag.classList.toggle('active'));
+    });
+    return card;
+  }
+
+  function addMember(){
+    document.getElementById('members').appendChild(createMemberCard());
+  }
+
+  document.getElementById('addMemberBtn').addEventListener('click', addMember);
+
+  // 시작 시 팀원 카드 2개 기본 생성
+  addMember();
+  addMember();
+
+  document.getElementById('recommendBtn').addEventListener('click', () => {
+    const cards = document.querySelectorAll('.member-card');
+    const yesterdayMenus = [];
+    const tagCount = {};
+
+    cards.forEach(card => {
+      const y = card.querySelector('.yesterday-input').value.trim();
+      if (y) yesterdayMenus.push(y);
+      card.querySelectorAll('.tag.active').forEach(t => {
+        const key = t.textContent;
+        tagCount[key] = (tagCount[key] || 0) + 1;
+      });
+    });
+
+    // 전날 메뉴와 겹치지 않는 후보 필터링
+    const candidates = RESTAURANTS.filter(r =>
+      !yesterdayMenus.some(y => r.menu.includes(y) || y.includes(r.menu))
+    );
+
+    const pool = candidates.length ? candidates : RESTAURANTS;
+
+    // 취향 태그 매칭 점수 계산
+    let best = pool[0];
+    let bestScore = -1;
+    pool.forEach(r => {
+      const score = r.tags.reduce((sum, t) => sum + (tagCount[t] || 0), 0);
+      if (score > bestScore) {
+        bestScore = score;
+        best = r;
+      }
+    });
+
+    document.getElementById('resultName').textContent = `${best.name} · ${best.menu}`;
+    document.getElementById('resultRating').textContent = renderStars(best.rating);
+    document.getElementById('resultSub').textContent =
+      bestScore > 0 ? `팀원 취향 태그와 ${bestScore}건 일치했어요` : "전날 메뉴를 제외하고 골라봤어요";
+
+    const addressEl = document.getElementById('resultAddress');
+    addressEl.href = mapSearchUrl(best);
+    addressEl.textContent = `📍 ${best.address}`;
+
+    document.getElementById('resultWalk').textContent =
+      `🚶 코스맥스 본사에서 도보 약 ${best.walkMin}분 (${best.distanceM}m)`;
+
+    const reserve = reservationInfo(best);
+    const reserveEl = document.getElementById('resultReserve');
+    reserveEl.href = reserve.url;
+    reserveEl.textContent = reserve.label;
+
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+</script>
+</body>
+</html>
