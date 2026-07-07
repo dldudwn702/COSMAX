@@ -46,10 +46,6 @@ st.markdown(
             text-align: center;
             margin-bottom: 20px;
         }}
-        .hero img {{
-            display: block;
-            margin: 0 auto;
-        }}
         .hero h1 {{
             font-family: 'Jua', sans-serif;
             font-size: 34px;
@@ -205,12 +201,9 @@ def initialize_members() -> None:
 
 initialize_members()
 
-logo_html = f'<img src="data:image/png;base64,{LOGO_B64}" width="220" />' if LOGO_B64 else ""
-
 st.markdown(
-    f"""
+    """
     <div class="hero">
-        {logo_html}
         <div class="stamp">센스MAX 신입사원 인증</div>
         <h1>행복<span style='color:#FF8166'>MAX</span> 점심시간</h1>
         <p class="hero-caption">전날 먹은 메뉴와 취향을 입력하면, 판교 근처에서 팀원 모두가 만족할 메뉴를 찾아드려요.</p>
