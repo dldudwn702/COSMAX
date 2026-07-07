@@ -1,5 +1,4 @@
 import base64
-import math
 from pathlib import Path
 
 import streamlit as st
@@ -10,56 +9,151 @@ st.set_page_config(
     layout="centered",
 )
 
+LOGO_PATH = Path(__file__).parent / "cosmaxlogo.png"
+LOGO_B64 = base64.b64encode(LOGO_PATH.read_bytes()).decode() if LOGO_PATH.exists() else ""
+
+AVATAR_EMOJIS = ["🧑", "👩", "🧑‍💻", "👨‍🍳", "🙋‍♀️", "🧑‍🎨"]
+AVATAR_COLORS = ["#FFE1B8", "#FFD1C7", "#D9F2E6", "#E4E1FF", "#FFF1B8", "#D8ECFF"]
+
 st.markdown(
-    """
+    f"""
     <style>
-        .block-container {padding-top: 0.5rem; padding-bottom: 2rem;}
-        .stamp {
+        @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
+        .stApp, [data-testid="stAppViewContainer"] {{
+            background-color: #FFF3E4;
+            background-image:
+                linear-gradient(180deg, rgba(255,246,235,0.93), rgba(255,238,219,0.93)),
+                url("data:image/png;base64,{LOGO_B64}");
+            background-repeat: no-repeat;
+            background-position: center top, center 10%;
+            background-size: cover, 1100px;
+            background-attachment: fixed, fixed;
+        }}
+        .block-container {{padding-top: 1rem; padding-bottom: 2rem;}}
+        .stamp {{
             display: inline-block;
-            padding: 6px 16px;
+            padding: 6px 18px;
             border-radius: 999px;
-            background: #FF8166;
+            background: #FF7A59;
             color: white;
             font-weight: 700;
-            transform: rotate(-4deg);
+            font-size: 13px;
+            box-shadow: 0 6px 14px rgba(233,87,63,0.35);
             margin-bottom: 14px;
-        }
-        .hero {
+        }}
+        .hero {{
             text-align: center;
-            margin-bottom: 24px;
-        }
-        .hero img {
+            margin-bottom: 20px;
+        }}
+        .hero img {{
             display: block;
             margin: 0 auto;
-        }
-        .hero-caption {
-            color: rgba(49, 51, 63, 0.6);
-            font-size: 0.875rem;
-        }
-        .tag-pill {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 999px;
-            border: 1px solid rgba(59,42,31,0.10);
-            background: #FFFBF2;
-            color: #8B7663;
-            font-size: 12px;
+        }}
+        .hero h1 {{
+            font-family: 'Jua', sans-serif;
+            font-size: 34px;
+            color: #3B2A1F;
+        }}
+        .hero-caption {{
+            color: rgba(59, 42, 31, 0.6);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }}
+        .section-label {{
             font-weight: 700;
-            margin: 4px 4px 0 0;
-        }
-        .tag-pill.active {
-            background: #2FAE96;
-            border-color: #2FAE96;
-            color: white;
-        }
-        .result-card {
-            background: #F8F8F8;
-            border: 1px solid rgba(59,42,31,0.10);
-            border-radius: 16px;
-            padding: 18px;
+            font-size: 16px;
+            color: #8B2E2E;
+            margin: 20px 0 10px 0;
+        }}
+        .member-avatar-row {{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }}
+        .member-avatar {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 16px;
+            flex-shrink: 0;
+        }}
+        .member-avatar-label {{
+            font-weight: 700;
+            font-size: 14px;
+            color: #3B2A1F;
+        }}
+        div[class*="st-key-member_card_"] {{
+            background: #FFFFFF;
+            border-radius: 20px !important;
+            border-color: rgba(139, 118, 99, 0.15) !important;
+            box-shadow: 0 8px 20px rgba(139, 45, 45, 0.08);
+            padding: 8px 4px;
+        }}
+        div[class*="st-key-member_tags_"] button {{
+            border-radius: 999px !important;
+            font-weight: 700 !important;
+            font-size: 12px !important;
+        }}
+        div[class*="st-key-member_tags_"] button[aria-pressed="true"],
+        div[class*="st-key-member_tags_"] button[aria-checked="true"] {{
+            background-color: #2FAE96 !important;
+            border-color: #2FAE96 !important;
+            color: white !important;
+        }}
+        .st-key-add_member_btn button {{
+            background: transparent !important;
+            border: 2px dashed rgba(255, 122, 89, 0.5) !important;
+            color: #FF7A59 !important;
+            font-weight: 700 !important;
+            border-radius: 14px !important;
+        }}
+        .st-key-recommend_btn button {{
+            background: linear-gradient(135deg, #FF7A59, #E9573F) !important;
+            border: none !important;
+            border-radius: 999px !important;
+            font-weight: 800 !important;
+            font-size: 17px !important;
+            padding: 14px 0 !important;
+            box-shadow: 0 10px 24px rgba(233, 87, 63, 0.35);
+            position: relative;
+        }}
+        .st-key-recommend_btn button::before,
+        .st-key-recommend_btn button::after {{
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            background: #FFF3E4;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }}
+        .st-key-recommend_btn button::before {{ left: -9px; }}
+        .st-key-recommend_btn button::after {{ right: -9px; }}
+        .st-key-result_card {{
             text-align: center;
-            margin-top: 20px;
-        }
+            border-radius: 20px !important;
+            box-shadow: 0 8px 20px rgba(139, 45, 45, 0.08);
+        }}
+        .result-badge {{
+            color: #2FAE96;
+            font-weight: 700;
+            font-size: 12px;
+        }}
+        .result-title {{
+            font-family: 'Jua', sans-serif;
+            font-size: 22px;
+            color: #3B2A1F;
+            margin-top: 6px;
+        }}
+        .result-stars {{
+            margin-top: 6px;
+        }}
     </style>
     """,
     unsafe_allow_html=True,
@@ -111,12 +205,7 @@ def initialize_members() -> None:
 
 initialize_members()
 
-logo_path = Path(__file__).parent / "cosmaxlogo.png"
-
-logo_html = ""
-if logo_path.exists():
-    logo_b64 = base64.b64encode(logo_path.read_bytes()).decode()
-    logo_html = f'<img src="data:image/png;base64,{logo_b64}" width="220" />'
+logo_html = f'<img src="data:image/png;base64,{LOGO_B64}" width="220" />' if LOGO_B64 else ""
 
 st.markdown(
     f"""
@@ -130,17 +219,29 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.markdown("<div class='section-label'>팀원별 정보 입력</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-label'>🍚 팀원별 정보 입력</div>", unsafe_allow_html=True)
 
 for idx, member in enumerate(st.session_state.members):
-    with st.container(border=True):
+    with st.container(border=True, key=f"member_card_{idx}"):
         col1, col2 = st.columns([6, 1])
         with col1:
+            avatar_emoji = AVATAR_EMOJIS[idx % len(AVATAR_EMOJIS)]
+            avatar_color = AVATAR_COLORS[idx % len(AVATAR_COLORS)]
+            st.markdown(
+                f"""
+                <div class="member-avatar-row">
+                    <span class="member-avatar" style="background:{avatar_color};">{avatar_emoji}</span>
+                    <span class="member-avatar-label">팀원 {idx + 1} 이름 (선택)</span>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
             member_name = st.text_input(
-                f"팀원 {idx + 1} 이름 (선택)",
+                f"팀원 {idx + 1} 이름",
                 value=member.get("name", ""),
                 key=f"member_name_{idx}",
-                label_visibility="visible",
+                label_visibility="collapsed",
+                placeholder="이름을 입력해주세요",
             )
         with col2:
             if st.button("✕", key=f"remove_member_{idx}", use_container_width=True):
@@ -153,9 +254,10 @@ for idx, member in enumerate(st.session_state.members):
             key=f"member_yesterday_{idx}",
             placeholder="예: 삼겹살, 김치찌개",
         )
-        member_tags = st.multiselect(
+        member_tags = st.pills(
             "취향 태그",
             TAG_OPTIONS,
+            selection_mode="multi",
             default=member.get("tags", []),
             key=f"member_tags_{idx}",
         )
@@ -164,11 +266,11 @@ for idx, member in enumerate(st.session_state.members):
         st.session_state.members[idx]["yesterday"] = member_yesterday
         st.session_state.members[idx]["tags"] = member_tags
 
-if st.button("＋ 팀원 추가하기", use_container_width=True):
+if st.button("＋ 팀원 추가하기", use_container_width=True, key="add_member_btn"):
     st.session_state.members.append({"name": "", "yesterday": "", "tags": []})
     st.rerun()
 
-if st.button("오늘의 메뉴 추천받기", type="primary", use_container_width=True):
+if st.button("오늘의 메뉴 추천받기", type="primary", use_container_width=True, key="recommend_btn"):
     yesterday_menus = [m.get("yesterday", "").strip() for m in st.session_state.members if m.get("yesterday", "").strip()]
     tag_count = {}
     for member in st.session_state.members:
@@ -195,21 +297,20 @@ if st.button("오늘의 메뉴 추천받기", type="primary", use_container_widt
 if st.session_state.recommendation:
     recommendation = st.session_state.recommendation
     restaurant = recommendation["restaurant"]
-    st.markdown("<div class='result-card'>", unsafe_allow_html=True)
-    st.markdown("<div style='color:#2FAE96; font-weight:700; font-size:12px;'>오늘의 추천 도착!</div>", unsafe_allow_html=True)
-    st.markdown(
-        f"<div style='font-family: Jua, sans-serif; font-size: 22px; margin-top: 6px;'>{restaurant['name']} · {restaurant['menu']}</div>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(f"<div style='margin-top: 6px;'>{render_stars(restaurant['rating'])}</div>", unsafe_allow_html=True)
-    if recommendation["best_score"] > 0:
-        st.caption(f"팀원 취향 태그와 {recommendation['best_score']}건 일치했어요")
-    else:
-        st.caption("전날 메뉴를 제외하고 골라봤어요")
-    st.link_button("📍 주소 보기", map_search_url(restaurant))
-    st.caption(f"🚶 코스맥스 본사에서 도보 약 {restaurant['walkMin']}분 ({restaurant['distanceM']}m)")
-    reserve_url, reserve_label = reservation_info(restaurant)
-    st.link_button(reserve_label, reserve_url)
-    st.markdown("</div>", unsafe_allow_html=True)
+    with st.container(border=True, key="result_card"):
+        st.markdown("<div class='result-badge'>오늘의 추천 도착!</div>", unsafe_allow_html=True)
+        st.markdown(
+            f"<div class='result-title'>{restaurant['name']} · {restaurant['menu']}</div>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(f"<div class='result-stars'>{render_stars(restaurant['rating'])}</div>", unsafe_allow_html=True)
+        if recommendation["best_score"] > 0:
+            st.caption(f"팀원 취향 태그와 {recommendation['best_score']}건 일치했어요")
+        else:
+            st.caption("전날 메뉴를 제외하고 골라봤어요")
+        st.link_button("📍 주소 보기", map_search_url(restaurant), use_container_width=True)
+        st.caption(f"🚶 코스맥스 본사에서 도보 약 {restaurant['walkMin']}분 ({restaurant['distanceM']}m)")
+        reserve_url, reserve_label = reservation_info(restaurant)
+        st.link_button(reserve_label, reserve_url, use_container_width=True)
 
 st.markdown("<div style='text-align:center; margin-top:36px; color:#8B7663; font-size:11px;'>코맥인들의 슬기로운 점심시간을 위하여</div>", unsafe_allow_html=True)
