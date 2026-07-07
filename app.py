@@ -36,14 +36,6 @@ st.markdown(
             color: rgba(49, 51, 63, 0.6);
             font-size: 0.875rem;
         }
-        .card {
-            background: #F8F8F8;
-            border: 1px solid rgba(59,42,31,0.10);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 10px rgba(59,42,31,0.05);
-        }
         .tag-pill {
             display: inline-block;
             padding: 6px 12px;
@@ -141,8 +133,7 @@ st.markdown(
 st.markdown("<div class='section-label'>팀원별 정보 입력</div>", unsafe_allow_html=True)
 
 for idx, member in enumerate(st.session_state.members):
-    with st.container():
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
+    with st.container(border=True):
         col1, col2 = st.columns([6, 1])
         with col1:
             member_name = st.text_input(
@@ -172,7 +163,6 @@ for idx, member in enumerate(st.session_state.members):
         st.session_state.members[idx]["name"] = member_name
         st.session_state.members[idx]["yesterday"] = member_yesterday
         st.session_state.members[idx]["tags"] = member_tags
-        st.markdown("</div>", unsafe_allow_html=True)
 
 if st.button("＋ 팀원 추가하기", use_container_width=True):
     st.session_state.members.append({"name": "", "yesterday": "", "tags": []})
